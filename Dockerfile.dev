@@ -1,22 +1,29 @@
-FROM python:3.9-slim
+# syntax=docker/dockerfile:1
 
-# Actualiza índices de paquetes. Instala lo necesario (mínimamente). Limpia caché para ahorrar espacio
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.12-slim
 
-# Directorio dentro del contenedor
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive
+
 WORKDIR /app
 
-# Copiar sólo los archivos necesarios para instalar dependencias
-COPY requirements.txt .
-# Instalar las dependencias indicadas en requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Dependencias de sistema básicas
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates build-essential pkg-config libpq-dev \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copiar todos los archivos del contexto (definido en el docker-compose) al workdir del contenedor
+# Instalar uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
+ && ln -s /root/.local/bin/uv /usr/local/bin/uv
+
+# Copiar todo el repositorio
 COPY . .
 
-# Exponer el puerto
+# Instalar dependencias desde pyproject.toml con uv
+RUN uv export > /tmp/requirements.txt \
+ && uv pip install --system --no-cache -r /tmp/requirements.txt
+
 EXPOSE 8000
 
-# Comando de arranque. Es sobreescribido por el comando definido en docker-compose
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "debug", "--reload"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

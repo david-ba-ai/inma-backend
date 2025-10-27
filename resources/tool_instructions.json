@@ -1,0 +1,76 @@
+{
+    "route_chain":[
+        {
+            "key": "busqueda",
+            "description": "Herramienta encargada de buscar inmuebles en nuestro catálogo a peticion del usuario y aportar informacion específica de un inmueble. También trata cualquier pregunta sobre algun un inmueble presentado. También trata sobre la situación financiera del usuario."
+        },
+        {
+            "key": "info",
+            "description": "Herramienta encargada de informar de los servicios de nuestra empresa o sobre consejos generales sobre compra-venta de inmuebles."
+        },
+        {
+            "key": "contacto",
+            "description": "herramienta encargada de indicar diferentes formas de contactar con nuestra empresa, tanto fisica como online"
+        },
+        {
+            "key": "visita",
+            "description": "Herramienta encargada de organizar visitas a alguno de los inmuebles previamente presentados"
+        },
+        {
+            "key": "bienvenida",
+            "description": "Herramienta encargada de realizar presentaciones y saludos, lo cual incluye conocer el nombre del usuario. También explica que eres y para que sirves coo herramienta de IA"
+        },
+        {
+            "key": "nombre",
+            "description": "Herramienta encargada de reconocer cuando el usuario nos dice su nombre"
+        },
+        {
+            "key": "off-topic",
+            "description": "Herramienta encargada de manejar situaciones en que la consulta no tiene nada que ver con el mundo inmobiliario, es absurda, ofensiva o no tiene sentido lógico."
+        }
+    ],
+    "searched_chain": [
+        {
+            "key": "result_instruct",
+            "description": "# La búsqueda ha arrojado resultados. Simplemente informa al usuario que puedes mostrarle información detallada del inmueble localizado o inmuebles si son varios y que incluso puedes organizar una visita. Indicalo en negrita."
+        },
+        {
+            "key": "not_result_instruct",
+            "description": "# No ha habido resultados de la consulta. Sugiere al cliente que pruebe con otras opciones. Analiza también la consulta por si ha habido un error. Debes saber que nuestro catálogo de inmuebles se limita a Asturias"
+        },
+        {
+            "key": "modified_query_instruct",
+            "description": "# El cliente ha realizado originalmente una consulta SQL, la cual no ha tenido resultados. Esta se ha modificado para dar lugar a una consulta definitiva. Debes informar al usuario de esta modificación. No uses los nombres de los campos en la base de datos pero si debes informar de las modificaciones realizadas."
+        }
+
+    ],
+    "present_chain": [
+        {
+            "key": "to_present",
+            "description": "# Presenta el inmueble al usuario. Utiliza un estilo narrativo y comercial, destacando aquellas características indicadas en el input del usuario. ReponOrganiza la respuesta en diferentes secciones. Haz uso especialmente del campo 'Observaciones_Publicas' para enriquecer la presentación. Indica de forma destacada (con negritas) que el usuario puede organizar una visita si así te lo indica."
+        },
+        {
+            "key": "already_presented",
+            "description": "# Debes responder a la consulta del usuario sobre un inmueble con los datos indicados. Utiliza un estilo narrativo y comercial. No es necesario que presentes el piso al completo, solo aquello por lo que el usuario pregunta."
+        }
+    ],
+    "text2sql_chain": [
+        {
+            "key": "last_query_instruct",
+            "description": "Completa la consulta SQL con las clausulas WHERE de la consulta SQL del usuario"
+        },
+        {
+            "key": "last_result_instruct",
+            "description": ""
+        },
+        {
+            "key": "rows_excluded_instruct",
+            "description": "Ids excluidos:\n Estos ids deben excluirse de la consulta SQL por ser inmuebles presentados previamente"
+        },
+        {
+            "key": "missing_fields_instruct",
+            "description": "Campos requeridos:\n Esta son las columnas que se han exigido al usuario:"
+        }
+
+    ]
+}

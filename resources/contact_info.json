@@ -1,0 +1,37 @@
+{
+    "offices":[
+        {
+            "city": "Oviedo",
+            "adress": "Calle Nueve de Mayo, 18",
+            "number": 985932020,
+            "email": "oviedo@agenciaiglesias.com"
+        },
+        {
+            "city": "Gijón",
+            "adress": "Calle Cabrales, 47",
+            "number": 985082020,
+            "email": "gijon@agenciaiglesias.com"
+        },
+        {
+            "city": "Lugo de Llanera",
+            "adress": "Calle José Manuel Bobes, 11",
+            "number": 984119115,
+            "email": "llanera@agenciaiglesias.com"
+        },
+        {
+            "city": "León",
+            "adress": "Calle Ramón y Cajal, 29",
+            "number": 987246259
+        },
+        {
+            "city": "Logroño",
+            "adress": "Calle Miguel Villanueva, 6",
+            "number": 987246259
+        }
+    ],
+
+    "webs": [
+        "https://www.agenciaiglesias.com/"
+    ]
+
+}

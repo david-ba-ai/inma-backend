@@ -1,0 +1,99 @@
+# SOLO PARA DESARROLLO
+# Los volumenes /app, redis y mongo no se sobreescriben en reconstrucciones posteriores con 'build'.
+# Para realizar una limpieza total antes de recargar los servicios ejecutar los siguientes comandos antes de 'build'
+# - 'docker-compose down --volumes --remove-orphans'
+# - 'docker image prune -a -f'
+
+services:
+
+  # -------- REDIS --------
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    ports:
+    - "6379:6379" # Exponer puerto para conexiones externas. Solo en desarrollo.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"] # Checkout con reinicio
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    networks: # Conexión a la red backend
+      - backend
+
+
+  # -------- MONGO --------
+  mongo:
+    image: mongo:6.0
+    command: ["mongod", "--quiet"] # Silencia logs innecesarios
+    volumes:
+      - mongo-data:/data/db
+    ports:
+    - "27017:27017" # Exponer puerto para conexiones externas. Solo en desarrollo.
+    healthcheck:  # Checkout con reinicio
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"] 
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    networks:   # Conexión a la red backend
+      - backend
+
+
+    # -------- POSTGRES --------
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-app_db}
+      
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" # Exponer puerto para conexiones externas. Solo en desarrollo.
+    healthcheck:  # Checkout con reinicio
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:   # Conexión a la red backend
+      - backend
+
+  # -------- BACKEND --------
+  backend:
+    build:
+      context: . # Directorio raíz
+      dockerfile: Dockerfile.dev # Localización del Dockerfile
+    image: inma_backend_dev # Imagen inmutable
+    working_dir: /app # Montar el proyecto en el contenedor para hot-reload
+    volumes:
+      - .:/app:cached  # Volumen que persiste entre reinicios
+    ports:
+      - "8000:8000" # Mapeo de puertos. Solo en desarrollo.
+    env_file:
+      - .env # Archivo .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --log-level debug --reload
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+
+volumes:
+  redis-data:
+  mongo-data:
+  postgres-data:
+
+networks:
+  backend:
+    driver: bridge

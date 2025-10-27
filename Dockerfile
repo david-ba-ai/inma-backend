@@ -1,19 +1,90 @@
-FROM python:3.9-slim
+# syntax=docker/dockerfile:1
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+########################################
+# STAGE 1 — deps
+# Instala dependencias desde pyproject.toml + uv.lock (reproducible)
+########################################
+FROM python:3.12-slim AS deps
 
-# Copiar y instalar dependencias
+# Variables de entorno básicas y limpieza
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive
+
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Paquetes del sistema mínimos (solo lo necesario para compilar wheels si hace falta)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates build-essential pkg-config libpq-dev \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copiar el resto del código del backend
+# Instalar UV (gestor moderno de dependencias)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
+ && ln -s /root/.local/bin/uv /usr/local/bin/uv
+
+# Copiamos los archivos de definición del proyecto
+COPY pyproject.toml uv.lock ./
+
+# Exportar dependencias del lockfile (sin incluir el proyecto raíz)
+# Esto asegura builds 100% reproducibles
+RUN uv export --frozen > /tmp/requirements.txt \
+ && pip install --no-cache-dir --prefix=/install -r /tmp/requirements.txt
+
+
+########################################
+# STAGE 2 — build
+# Instala tu proyecto dentro del entorno Python (NO editable)
+########################################
+FROM python:3.12-slim AS build
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Copiamos dependencias desde el stage anterior
+COPY --from=deps /install /usr/local
+
+# Copiamos TODO el repositorio (fuente + configs + prompts + resources)
 COPY . .
 
-# Exposición del puerto
+# Instalamos el proyecto como paquete (no editable)
+# Esto genera una instalación limpia, con metadatos y entrypoints
+RUN pip install --no-cache-dir .
+
+
+########################################
+# STAGE 3 — runtime
+# Imagen final: ligera, segura y rápida
+########################################
+FROM python:3.12-slim AS runtime
+
+# Configuración base
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Crear usuario no-root por seguridad
+RUN useradd -m appuser
+USER appuser
+
+# Copiar dependencias + proyecto ya instalado
+COPY --from=build /usr/local /usr/local
+
+# Copiar solo artefactos necesarios en tiempo de ejecución
+COPY prompts ./prompts
+COPY config ./config
+COPY resources ./resources
+# Si tienes templates/static u otros assets:
+# COPY templates ./templates
+# COPY static ./static
+
+# Puerto expuesto (FastAPI/Uvicorn)
 EXPOSE 8000
 
-# Comando para ejecutar la app (FastAPI)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "debug", "--reload"]
+# Healthcheck para Docker/Kubernetes
+HEALTHCHECK CMD curl -fs http://localhost:8000/health || exit 1
+
+# Comando de inicio (multi-worker para producción)
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
