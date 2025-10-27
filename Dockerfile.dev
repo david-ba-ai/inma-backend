@@ -1,0 +1,22 @@
+FROM python:3.9-slim
+
+# Actualiza índices de paquetes. Instala lo necesario (mínimamente). Limpia caché para ahorrar espacio
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+# Directorio dentro del contenedor
+WORKDIR /app
+
+# Copiar sólo los archivos necesarios para instalar dependencias
+COPY requirements.txt .
+# Instalar las dependencias indicadas en requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar todos los archivos del contexto (definido en el docker-compose) al workdir del contenedor
+COPY . .
+
+# Exponer el puerto
+EXPOSE 8000
+
+# Comando de arranque. Es sobreescribido por el comando definido en docker-compose
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "debug", "--reload"]

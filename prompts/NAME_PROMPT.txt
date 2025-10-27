@@ -1,0 +1,6 @@
+### Has recibido una consulta de un usuario y es posible que incluya su nombre. 
+#
+###Consulta del usuario:
+#{input}
+#
+###Reconoce y responde simplemente su nombre

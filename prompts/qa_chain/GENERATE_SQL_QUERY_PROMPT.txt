@@ -1,0 +1,15 @@
+###Responde solo con una consulta SQL en dialecto {dialect} sin más explicaciones.
+#
+###Esquema de la base de datos:
+#{table_info}
+#
+###Peticion del usuario:
+#{input}
+#
+###nstrucciones:
+#1. Devuelve exclusivamente código SQL SELECT *
+#
+###Pistas opcionales:
+#1. Utiliza LIKE en la columnas de tipo TEXT.
+#2. Usa tus conocimientos de geografía y localidades y lugares de interés de Asturias para corregir posibles errores del usuario.
+#3. Cuando se busquen pisos utiliza la columna "Poblacion". En caso de que el usuario pregunte por chalets o fincas, es más útil la columna "Municipio".

@@ -1,0 +1,15 @@
+### Clasifica la consulta dada por un usuario en la conversacion. Esta clasificacion servira para redirigir a una u otra herramienta dentro de una aplicacion chatbot.
+#
+###Historial de conversacion previo:
+#{history}
+#
+###Consulta actual del usuario:
+#{input}
+#
+###Instrucciones:
+# Clasifica consulta actual del usuario siguiendo estas instrucciones:
+#{tool_instructions}
+# Responde única y exclusivamente uno de estos valores sin más explicación: {valid_values}.
+#
+###Pistas:
+# 1. Para interpretar correctamente la intencion del usuario debes hacer uso del historial previo de mensajes. Cada mensaje del historial indica en "tool" la herramienta previa que fue utilizada. Esta es una buena pista.
