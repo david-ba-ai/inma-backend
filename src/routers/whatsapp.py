@@ -20,10 +20,6 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-account_sid = os.environ["TWILIO_ACCOUNT_SID"]
-auth_token = os.environ["TWILIO_AUTH_TOKEN"]
-from_phone =os.getenv('TWILIO_TO_NUMBER')
-
 # ------ RUTA PARA MENSAJES DE WHATSAPP ------
 @router.post("/whats-message")
 async def chat(

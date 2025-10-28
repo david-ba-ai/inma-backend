@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from src.models.messages import MessagesModel
 from src.schemas.message import MessageModel
-from src.services.mongo_db import MongoDatabase
+from src.database.mongo import MongoDatabase
 
 class MessagesService:
     """Clase instanciable de servicio de gestión del historial de mensajes. Pensada para almacenamiento en MongoDB"""

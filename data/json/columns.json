@@ -1,0 +1,988 @@
+{
+    "api_columns": [
+        {
+            "name": "IdAgencia",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Identificador único de la agencia",
+            "search": false
+        },
+        {
+            "name": "IdGestor",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Identificador único del gestor",
+            "search": false
+        },
+        {
+            "name": "IdOficina",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Identificador único de la oficina",
+            "search": false
+        },
+        {
+            "name": "Ref_CRM",
+            "type": "CHAR",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Identificador dentro de la plataforma CRM",
+            "search": false
+        },
+        {
+            "name": "Barrio",
+            "type": "VARCHAR",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Barrio o zona donde se ubica el inmueble",
+            "search": true,
+            "api_name": "Zona",
+            "priority": 4,
+            "presentation": true
+        },
+        {
+            "name": "Poblacion",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Poblacion donde se ubica el inmueble",
+            "search": true,
+            "priority": 2,
+            "presentation": true
+        },
+        {
+            "name": "Municipio",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Municipio donde se ubica el inmueble",
+            "search": true,
+            "priority": 1,
+            "presentation": true
+        },
+        {
+            "name": "Provincia",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": true,
+            "description": "Provincia donde se ubica el inmueble",
+            "search": true,
+            "priority": 1,
+            "presentation": true
+        },
+        {
+            "name": "CP",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Código Postal donde se ubica el inmueble",
+            "search": false,
+            "priority": 3,
+            "presentation": false
+        },
+        {
+            "name": "Direccion",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Dirección donde se ubica el inmueble. Suele incluir calle y número.",
+            "search": true,
+            "priority": 4,
+            "presentation": true
+        },
+        {
+            "name": "Planta",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Planta o piso donde se ubica el inmueble",
+            "search": true,
+            "priority": 5,
+            "presentation": true
+        },
+        {
+            "name": "Numero",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de calle donde se ubica el inmueble",
+            "search": true,
+            "priority": 5,
+            "presentation": true
+        },
+        {
+            "name": "Puerta",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Puerta donde se ubica el inmueble",
+            "search": true,
+            "priority": 5,
+            "presentation": true
+        },
+        {
+            "name": "Latitud",
+            "type": "REAL",
+            "primary_key": false,
+            "not_null": true,
+            "description": "Coordenada de latitud donde se ubica el inmueble",
+            "search": true,
+            "view": true,
+            "priority": 5,
+            "presentation": false
+        },
+        {
+            "name": "Longitud",
+            "type": "REAL",
+            "primary_key": false,
+            "not_null": true,
+            "description": "Coordenada de longitud donde se ubica el inmueble",
+            "search": true,
+            "view": true,
+            "priority": 5,
+            "presentation": false
+        },
+        {
+            "name": "CheckCercaPlaya",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble está o no cerca de la playa",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "CheckVistasMar",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no vistas al mar",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckVistasCiudad",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no vistas a la ciudad",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckVistasMontana",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no vistas a la montaña",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckVistasDestacadas",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no vistas destacadas",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckOrientacionSur",
+            "api_type": "TEXT",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "La orientación del inmueble",
+            "search": true,
+            "api_name": "Orientacion",
+            "priority": 3,
+            "presentation": false
+        },
+        {
+            "name": "CheckObraNueva",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el es o no de obra nueva",
+            "search": true,
+            "priority": 4,
+            "presentation": true
+        },
+        {
+            "name": "CheckLuz",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene instalación de luz",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "Metros_Construidos",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Metros cuadrados construidos del inmueble",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "Metros_Utiles",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Metros cuadrados útiles del inmueble",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "Metros_Parcela",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Metros cuadrados de la parcela asociada al inmueble. 0 indica ausencia de parcela",
+            "search": true,
+            "priority": 4,
+            "presentation": true
+        },
+        {
+            "name": "Metros_Terraza",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Metros cuadrados de la parcela asociada al inmueble. 0 indica ausencia de terraza",
+            "search": false,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "Operacion",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Operación comercial asociada",
+            "values": [
+                "Venta", 
+                "Alquiler", 
+                "Traspaso"
+            ],
+            "search": true,
+            "priority": 1,
+            "presentation": false
+        },
+        {
+            "name": "Tipo",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": true,
+            "description": "Tipo de inmueble",
+            "values": [
+                "Casas o chalets", 
+                "Locales", 
+                "Fincas y solares",
+                "Pisos",
+                "Garajes",
+                "Oficinas",
+                "Negocios",
+                "Naves",
+                "Trasteros",
+                "Edificios"
+            ],
+            "search": true,
+            "priority": 1,
+            "presentation": false
+        },
+        {
+            "name": "Subtipo",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Subtipo de inmueble",
+            "values": [
+                "Independientes", 
+                "Edificables",
+                "No edificables",
+                "Adosadas",
+                "Pareadas",
+                "Solares",
+                "Bar",
+                "Restaurante",
+                "Hotel",
+                "Locales comerciales",
+                "Suelo industrial"
+            ],
+            "search": true,
+            "priority": 1,
+            "presentation": true
+        },
+        {
+            "name": "CheckAtico",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si es o no un ático",
+            "search": true,
+            "priority": 3,
+            "presentation": false
+        },
+        {
+            "name": "CheckDuplex",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si es o no un duplex",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "Antiguedad",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Año de construcción del inmueble",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "NumAseos",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de aseos del inmueble",
+            "search": true,
+            "api_name": "Aseos",
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "Banos",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de baños del inmueble",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckAscensor",
+            "api_type": "INTEGER",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de ascensores del inmueble",
+            "search": true,
+            "api_name": "Ascensor",
+            "priority": 2,
+            "presentation": false
+        },
+        {
+            "name": "NumDormitorios",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de dormitorios del inmueble",
+            "search": true,
+            "api_name": "Dormitorios",
+            "priority": 2,
+            "presentation": true
+        },
+        {
+            "name": "Cocina",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Tipo de cocina del inmueble",
+            "values": [
+                "Independiente", 
+                "Amueblada sin electrodomesticos", 
+                "Amueblada con electrodomesticos", 
+                "Americana",
+                "No tiene cocina"
+            ],
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckComedor",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no comedor",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckDespachos",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no despachos en el inmueble",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "Despachos",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de despachos en el inmueble",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckVentanasAluminio",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no ventanas de aluminio",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckVentanasClimalit",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no ventanas Climalit",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckVentanasMadera",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no ventanas de aluminio",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckVentanasPVC",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no ventanas de PVC",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "NumTerrazas",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de terrazas del inmueble",
+            "search": true,
+            "api_name": "Terraza",
+            "priority": 4,
+            "presentation": true
+        },
+        {
+            "name": "Balcon",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de balcones del inmueble",
+            "search": true,
+            "priority": 4,
+            "presentation": true
+        },
+        {
+            "name": "Metros_Balcon",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de metros cuadrados del balcón",
+            "search": true,
+            "priority": 5,
+            "presentation": false
+        },
+        {
+            "name": "CheckGaraje",
+            "api_type": "INTEGER",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de garajes asociados al inmueble",
+            "search": true,
+            "api_name": "Garajes",
+            "priority": 2,
+            "presentation": true
+        },
+        {
+            "name": "CheckTrastero",
+            "api_type": "INTEGER",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de trasteros asociados al inmueble",
+            "search": true,
+            "api_name": "Trastero",
+            "priority": 3,
+            "presentation": false
+        },
+        {
+            "name": "CheckSotano",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no sótano",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckPiscina",
+            "api_type": "INTEGER",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Número de piscinas asociadas al inmueble",
+            "search": true,
+            "api_name": "Piscina",
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "PiscinaPropia",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Piscina asociada al inmueble",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "PiscinaComunitaria",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Piscina asociada a la comunidad",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "CheckJardin",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no un jardín asociado",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "Metros_Jardin",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Metros cuadrados del jardín",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckPatio",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no un patio asociado",
+            "search": true,
+            "priority": 5,
+            "presentation": false
+        },
+        {
+            "name": "Metros_Patio",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Metros cuadrados del patio",
+            "search": false,
+            "presentation": false          
+        },
+        {
+            "name": "CheckZonaComunitaria",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene o no una zona comunitaria asociada",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "Agua_Caliente",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Tipo de calefacción del agua",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "Calefaccion",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Tipo de calefacción del inmueble",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckAireAcondicionado",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene aire acondicionado",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckChimenea",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble tiene chimenea",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "Gastos_Comunidad",
+            "api_type": "TEXT",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Gastos de la comunidad",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "Precio",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "El precio del inmueble. Si es para alquiler es el precio de la mensualidad",
+            "search": true,
+            "priority": 2,
+            "presentation": true
+        },
+        {
+            "name": "PrecioRebajado",
+            "type": "INTEGER",
+            "primary_key": false,
+            "not_null": false,
+            "description": "El precio rebajado del inmueble en caso de tenerlo",
+            "search": false,
+            "presentation": false
+        },
+        {
+            "name": "Foto",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Diccionario que incluye la foto principal del inmueble",
+            "search": false,
+            "view": true
+        },
+        {
+            "name": "array_url_fotos",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Lista de direcciones URL donde se encuentras fotos del inmueble",
+            "search": false,
+            "view": true
+        },
+        {
+            "name": "RC",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Referencia Catastral del inmueble",
+            "search": false,
+            "view": false
+        },
+        {
+            "name": "TitularPublico",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Titular publicitario descriptivo corto",
+            "search": false
+        },
+        {
+            "name": "PalabrasClave",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Palabras claves asociadas a la oportunidad comercial del inmueble",
+            "search": false
+        },
+        {
+            "name": "Observaciones_Publicas",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Descripción extensa del inmueble",
+            "search": false,
+            "view": true
+        },
+        {
+            "name": "URLExterna",
+            "type": "TEXT",
+            "primary_key": false,
+            "not_null": false,
+            "description": "URL de la web de la agencia con información del inmueble",
+            "search": false,
+            "view": true
+        },
+        {
+            "name": "PrioridadRK",
+            "api_type": "TEXT",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Plataforma CRM que gestiona el inmueble. Se utiliza para dar prioridad a RK",
+            "search": true,
+            "api_name": "PlataformaCRM",
+            "view": false,
+            "priority": 4
+        },
+        {
+            "name": "CheckAlquilerTemporal",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si se trata o no de un inmueble para alquiler temporal como vacaciones o para estudiantes",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "CheckAlquilerOpcionCompra",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene la opción de alquiler con opción a compra",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckAlquilerHabitacion",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si existe o no la opción de alquilar habitaciones individuales",
+            "search": true,
+            "priority": 3,
+            "presentation": false
+        },
+        {
+            "name": "CheckAmueblado",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si está o no amueblado",
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "CheckMascotasSi",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si se permiten o no mascotas",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckLicenciaTuristica",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si tiene o no licencia turística",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "CheckEnRentabilidad",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "",
+            "search": false
+        },
+        {
+            "name": "Estado",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Estado del inmueble",
+            "values": [
+                "Disponible",
+                "Reservado"
+            ],
+            "search": false
+        },
+        {
+            "name": "Estado_General",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Estado general del inmueble",
+            "values": [
+                "Sencillo", 
+                "Buen estado",
+                "Nuevo", 
+                "A estrenar", 
+                "1ras Calidades", 
+                "A reformar", 
+                "Reformado"
+            ],
+            "search": true,
+            "priority": 3,
+            "presentation": true
+        },
+        {
+            "name": "Certificado_Energetico",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Certificado Energético del inmueble",
+            "values": [
+                "EXENTO", 
+                "D", 
+                "B", 
+                "E", 
+                "C", 
+                "F", 
+                "G", 
+                "A", 
+                "EN TRAMITE"
+            ],
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        }
+    ],
+
+
+    "enrichment_columns": [
+        {
+            "name": "TipoVentana",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "El tipo de ventanas del inmueble",
+            "values": [
+                "Aluminio",
+                "PVC",
+                "Climalit",
+                "Madera"
+            ],
+            "search": true,
+            "priority": 5,
+            "presentation": false
+        },
+        {
+            "name": "EstacionTrenCerca",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si está cerca o no de la estación de tren",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "EstacionBusCerca",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si está cerca o no de la estación de bus",
+            "search": true,
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "ParqueCerca",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si hay un parque grande cerca o no",
+            "search": true,
+            "values": [
+                "Parque San Francisco",
+                "Parque de Invierno",
+                "Parque del Oeste",
+                "Parque de Isabel la Catolica",
+                "Parque de Moreda",
+                "Parque de Ferrera"
+            ],
+            "priority": 5,
+            "presentation": false
+        },
+        {
+            "name": "EsCentro",
+            "type": "BOOLEAN",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si el inmueble está en el centro de la ciudad",
+            "search": true,
+            "priority": 2,
+            "presentation": true
+        },
+        {
+            "name": "UniversidadCerca",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si hay universidad o facultades cerca",
+            "search": true,
+            "values": [
+                "Campus del Cristo",
+                "Campus del Milan",
+                "La Laboral"                
+            ],
+            "priority": 4,
+            "presentation": false
+        },
+        {
+            "name": "HospitalCerca",
+            "type": "ENUM",
+            "primary_key": false,
+            "not_null": false,
+            "description": "Si hay un hospital cerca",
+            "search": true,
+            "values": [
+                "Hospital Universitario Central de Asturias (HUCA)",
+                "Hospital Jove",
+                "Hospital Universitario de Cabueñes"
+            ],
+            "priority": 4,
+            "presentation": false
+        }
+    ]
+}

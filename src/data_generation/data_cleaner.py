@@ -6,6 +6,7 @@ from pprint import pprint
 from opencage.geocoder import OpenCageGeocode
 from typing import List
 
+from src.core.settings import settings
 from src.config import raw_total_inm_csv_dir, columns_dir, clean_total_inm_csv_dir, reverse_geocode_inm_csv_dir
 from src.data_generation.column_functions import integrating_localization_data, data_type_cleaning, replace_values, rename_columns, remove_rows
 # EXECUTION SCRIPT: "python -m data_generation.data_cleaner"
@@ -17,8 +18,7 @@ data_columns = {}
 with open(columns_dir, 'r') as file:
     data_columns = json.load(file)
 
-api_key = os.getenv("OPENCAGE_KEY")
-geocoder = OpenCageGeocode(api_key)
+geocoder = OpenCageGeocode(settings.opencage_key)
 
 
 #------FUNCTIONS------

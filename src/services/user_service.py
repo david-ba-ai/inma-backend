@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from src.models.user import UserModel
-from src.services.mongo_db import MongoDatabase
+from src.database.mongo import MongoDatabase
 
 class UserService:
     """Clase instanciable de servicio de gestión del datos de usuario. Pensada para almacenamiento en MongoDB"""

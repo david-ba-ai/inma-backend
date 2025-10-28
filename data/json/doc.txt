@@ -1,0 +1,4 @@
+La lista de columnas contiene un JSON con las columnas extraidas de la base de datos ("api_columns") así como aquellas que se han generado nuevas ("enrichment_columns")
+
+El campo "priority" indica la prioridad de la columna cuando es necesario alterar o modificar la consulta SQL en caso de que esta no obtenga resultados.
+El campo "presentation" son las columnas que se utilizan en la presentación total del inmueble.

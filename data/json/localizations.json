@@ -1,0 +1,216 @@
+{
+    "localizations": [
+        {
+            "id": 1,
+            "lon": -5.850941,
+            "lat": 43.369108,
+            "description": "Estacion de Bus de Oviedo",
+            "column": "EstacionBusCerca",
+            "city": "Oviedo",
+            "radio": 600,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 2,
+            "lon": -5.667134,
+            "lat": 43.539145,
+            "description": "Estacion de Bus de Gijon",
+            "column": "EstacionBusCerca",
+            "city": "Gijon",
+            "radio": 600,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 3,
+            "lon": -5.923280,
+            "lat": 43.561454,
+            "description": "Estacion de Bus de Aviles",
+            "column": "EstacionBusCerca",
+            "city": "Aviles",
+            "radio": 600,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 4,
+            "lon": -5.854729,
+            "lat": 43.366265,
+            "description": "Estacion de Tren de Oviedo",
+            "column": "EstacionTrenCerca",
+            "city": "Oviedo",
+            "radio": 600,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 5,
+            "lon": -5.675428,
+            "lat": 43.537881,
+            "description": "Estacion de Tren de Gijon",
+            "column": "EstacionTrenCerca",
+            "city": "Gijon",
+            "radio": 600,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 6,
+            "lon": -5.923147,
+            "lat": 43.561194,
+            "description": "Estacion de Tren de Aviles",
+            "column": "EstacionTrenCerca",
+            "city": "Aviles",
+            "radio": 600,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 7,
+            "lon": -5.850504,
+            "lat": 43.361724,
+            "description": "Parque San Francisco",
+            "column": "ParqueCerca",
+            "city": "Oviedo",
+            "radio": 500,
+            "type": "TEXT"
+        },
+        {
+            "id": 7,
+            "lon": -5.849147,
+            "lat": 43.354584,
+            "description": "Parque de Invierno",
+            "column": "ParqueCerca",
+            "city": "Oviedo",
+            "radio": 500,
+            "type": "TEXT"
+        },
+        {
+            "id": 7,
+            "lon": -5.873273,
+            "lat": 43.362643,
+            "description": "Parque del Oeste",
+            "column": "ParqueCerca",
+            "city": "Oviedo",
+            "radio": 500,
+            "type": "TEXT"
+        },
+        {
+            "id": 8,
+            "lon": -5.642032,
+            "lat": 43.537775,
+            "description": "Parque de Isabel la Catolica",
+            "column": "ParqueCerca",
+            "city": "Gijon",
+            "radio": 500,
+            "type": "TEXT"
+        },
+        {
+            "id": 8,
+            "lon": -5.681295,
+            "lat": 43.535478,
+            "description": "Parque de Moreda",
+            "column": "ParqueCerca",
+            "city": "Gijon",
+            "radio": 500,
+            "type": "TEXT"
+        },
+        {
+            "id": 8,
+            "lon": -5.922573,
+            "lat": 43.553169,
+            "description": "Parque de Ferrera",
+            "column": "ParqueCerca",
+            "city": "Aviles",
+            "radio": 500,
+            "type": "TEXT"
+        },
+        {
+            "id": 9,
+            "lon": -5.843702,
+            "lat": 43.362319,
+            "description": "Casco Antiguo de Oviedo",
+            "column": "EsCentro",
+            "city": "Oviedo",
+            "radio": 800,
+            "type": "BOOLEAN"
+
+        },
+        {
+            "id": 10,
+            "lon": -5.662892,
+            "lat": 43.543512,
+            "description": "Centro de Gijon",
+            "column": "EsCentro",
+            "city": "Gijon",
+            "radio": 800,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 11,
+            "lon": -5.921886,
+            "lat": 43.555452,
+            "description": "Casco historico de Aviles",
+            "column": "EsCentro",
+            "city": "Aviles",
+            "radio": 800,
+            "type": "BOOLEAN"
+        },
+        {
+            "id": 12,
+            "lon": -5.869345,
+            "lat": 43.356055,
+            "description": "Campus del Cristo",
+            "column": "UniversidadCerca",
+            "city": "Oviedo",
+            "radio": 600,
+            "type": "TEXT"
+        },
+        {
+            "id": 13,
+            "lon": -5.841599,
+            "lat": 43.368518,
+            "description": "Campus del Milan",
+            "column": "UniversidadCerca",
+            "city": "Oviedo",
+            "radio": 600,
+            "type": "TEXT"
+        },
+        {
+            "id": 14,
+            "lon": -5.613452,
+            "lat": 43.523980,
+            "description": "La Laboral",
+            "column": "UniversidadCerca",
+            "city": "Gijon",
+            "radio": 600,
+            "type": "TEXT"
+        },
+        {
+            "id": 15,
+            "lon": -5.826806,
+            "lat": 43.375113,
+            "description": "Hospital Universitario Central de Asturias (HUCA)",
+            "column": "HospitalCerca",
+            "city": "Oviedo",
+            "radio": 800,
+            "type": "TEXT"
+        },
+        {
+            "id": 16,
+            "lon": -5.700251,
+            "lat": 43.550006,
+            "description": "Hospital Jove",
+            "column": "HospitalCerca",
+            "city": "Gijon",
+            "radio": 800,
+            "type": "TEXT"
+        },
+        {
+            "id": 17,
+            "lon": -5.607249,
+            "lat": 43.525121,
+            "description": "Hospital Universitario de Cabueñes",
+            "column": "HospitalCerca",
+            "city": "Gijon",
+            "radio": 800,
+            "type": "TEXT"
+        }
+    ]
+}
+    

@@ -1,8 +1,11 @@
 # SOLO PARA DESARROLLO
-# Los volumenes /app, redis y mongo no se sobreescriben en reconstrucciones posteriores con 'build'.
+# Los volumenes no se sobreescriben en reconstrucciones posteriores con 'build'.
 # Para realizar una limpieza total antes de recargar los servicios ejecutar los siguientes comandos antes de 'build'
-# - 'docker-compose down --volumes --remove-orphans'
-# - 'docker image prune -a -f'
+# - docker-compose down --volumes --remove-orphans
+# - docker image prune -a -f
+
+# docker compose -f docker_compose.yaml build
+# docker compose -f docker_compose.yaml up
 
 services:
 
@@ -27,7 +30,12 @@ services:
   # -------- MONGO --------
   mongo:
     image: mongo:6.0
-    command: ["mongod", "--quiet"] # Silencia logs innecesarios
+    command: [
+                "mongod",
+                "--quiet",
+                "--logpath", "/dev/null",
+                "--setParameter", "logComponentVerbosity={ verbosity: 0 }"
+              ] # Silencia logs innecesarios
     volumes:
       - mongo-data:/data/db
     ports:
@@ -47,16 +55,16 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-app_db}
+      POSTGRES_USER: ${PG__USER:-devuser}
+      POSTGRES_PASSWORD: ${PG__PASSWORD:-devpassword}
+      POSTGRES_DB: ${PG__DB:-postgres_db}
       
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432" # Exponer puerto para conexiones externas. Solo en desarrollo.
     healthcheck:  # Checkout con reinicio
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U ${PG__USER:-devuser} -d ${PG__DB:-postgres_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -77,7 +85,7 @@ services:
     env_file:
       - .env # Archivo .env
     environment:
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - DATABASE_URL=postgresql+asyncpg://${PG__USER}:${PG__PASSWORD}@${PG__HOST}:${PG__PORT}/${PG__DB}
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --log-level debug --reload
     depends_on:
       redis:

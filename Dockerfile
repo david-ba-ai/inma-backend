@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl ca-certificates build-essential pkg-config libpq-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# Instalar UV (gestor moderno de dependencias)
+# Instalar UV
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
  && ln -s /root/.local/bin/uv /usr/local/bin/uv
 
@@ -26,7 +26,6 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
 COPY pyproject.toml uv.lock ./
 
 # Exportar dependencias del lockfile (sin incluir el proyecto raíz)
-# Esto asegura builds 100% reproducibles
 RUN uv export --frozen > /tmp/requirements.txt \
  && pip install --no-cache-dir --prefix=/install -r /tmp/requirements.txt
 
@@ -49,7 +48,6 @@ COPY --from=deps /install /usr/local
 COPY . .
 
 # Instalamos el proyecto como paquete (no editable)
-# Esto genera una instalación limpia, con metadatos y entrypoints
 RUN pip install --no-cache-dir .
 
 
@@ -65,20 +63,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Crear usuario no-root por seguridad
+# Usuario no-root
 RUN useradd -m appuser
 USER appuser
 
 # Copiar dependencias + proyecto ya instalado
 COPY --from=build /usr/local /usr/local
 
-# Copiar solo artefactos necesarios en tiempo de ejecución
+# Copiar solo artefactos necesarios en tiempo de ejecución.
 COPY prompts ./prompts
 COPY config ./config
 COPY resources ./resources
-# Si tienes templates/static u otros assets:
-# COPY templates ./templates
-# COPY static ./static
 
 # Puerto expuesto (FastAPI/Uvicorn)
 EXPOSE 8000

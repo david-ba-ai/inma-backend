@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from typing import Dict, Any
 
 from src.models.session import SessionModel
-from src.services.redis_cache import RedisCache
+from src.database.redis import RedisCache
 
 
 class SessionService:

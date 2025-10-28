@@ -1,6 +1,5 @@
 import logging
 import os
-import json
 from twilio.rest import Client
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,14 +9,14 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from dotenv import load_dotenv
 
+from src.core.settings import settings
 from src.core.middleware import SessionMiddleware
-from src.services.mongo_db import MongoDatabase
-from src.services.redis_cache import RedisCache
+from src.core.factories import create_mongo, create_redis, create_postgres
 from src.services.sessions_service import SessionService
 from src.services.messages_service import MessagesService
 from src.services.user_service import UserService
 from src.utils.logger_config import configure_logging
-from src.routers.base import main_router
+#from src.routers.base import main_router
 from src.data_generation.load_app_data import load_app_data
 
 # Configurar logging
@@ -28,50 +27,40 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Gestión del ciclo de vida de la aplicación."""
-
+    
     #------INSTANCIAS DE SERVICIOS Y BASE DE DATOS
-    try:
-        redis_cache_instance = RedisCache()  # Instancia de Redis        
-        mongo_db_instance = MongoDatabase()  # Instancia de MongoDB
-        await mongo_db_instance.init_beanie()   # Iniciación de Beanie        
-
-        sessions_service_instance = SessionService(redis_cache_instance) # Instancia de SessionService
-        messages_service_instance = MessagesService(mongo_db_instance) # Instancia de MessagesService 
-        users_service_instance = UserService(mongo_db_instance) # Instancia de UserService 
-
-        app.state.redis_cache = redis_cache_instance
-        app.state.mongodb = mongo_db_instance
-        app.state.sessions_service = sessions_service_instance
-        app.state.messages_service = messages_service_instance
-        app.state.users_service = users_service_instance
-
-        logger.info("Session service saved in src.state...")
-    except Exception as e:
-        logger.critical(f"Error initializing service instances: {e}")
-        raise RuntimeError("Failed to initialize services instances") from e
+    redis_cache = create_redis()  # Instancia de Redis        
+    mongo_db = create_mongo()  # Instancia de MongoDB
+    postgres_db = create_postgres()  # Instancia de PostgreSQL  
     
-    #------CONEXIÓN A REDIS
+    #------INICIALIZAR Y PROBAR CONEXIONES
     try:
-        await redis_cache_instance.ping()   # Verificar conexión Redis
-        logger.info("Connected to Redis successfully.")
+        await mongo_db.init_beanie() # Incializar Beanie
+        await mongo_db.ping()
+        logger.info("MongoDB connected successfully")
+
+        await redis_cache.ping()
+        logger.info("Redis connected successfully")
+
+        await postgres_db.connect()
+        await postgres_db.ping()
+        logger.info("Postgres connected successfully")
+
     except Exception as e:
-        logger.critical(f"Error connecting to Redis: {e}")
-        raise RuntimeError(f"Error connecting to Redis: {e}")
+        logger.critical(f"Error initializing services: {e}")
+        raise RuntimeError("Service initialization failed") from e
     
-    #------CONEXIÓN A MONGO
-    try:    
-        await mongo_db_instance.ping()  # Verificar conexión MongoDB
-        logger.info("Connected to Mongo successfully.")
-        await mongo_db_instance.create_indexes()
-    except Exception as e:
-        logger.critical(f"Error connecting to MongoDB: {e}")
-        raise RuntimeError(f"Error connecting to MongoDB: {e}")
+    #------REGISTRAR EN APP STATE
+    app.state.mongodb = mongo_db
+    app.state.redis_cache = redis_cache
+    app.state.postgres = postgres_db
+    app.state.messages_service = MessagesService(mongo_db) # Servicio de mensajes
+    app.state.users_service = UserService(mongo_db) # Servicio de usuarios
+    app.state.sessions_service = SessionService(redis_cache) # Servicio de sesiones
     
     #------CONFIGURAR TWILIO
     try:
-        account_sid = os.environ["TWILIO_ACCOUNT_SID"]
-        auth_token = os.environ["TWILIO_AUTH_TOKEN"]
-        client = Client(account_sid, auth_token)
+        client = Client(settings.twilio.account_sid, settings.twilio.auth_token)
         app.state.twilio_client = client
 
     except Exception as e:
@@ -82,22 +71,23 @@ async def lifespan(app: FastAPI):
     
     #------CIERRE DE CONEXIONES
     try:
-        logger.info("Closing MongoDB connection...")
-        await mongo_db_instance.close()
-        logger.info("Resources released successfully.")
+        await postgres_db.close()
+        logger.info("Postgres connection closed.")
     except Exception as e:
-        logging.critical(f"Error closing MongoDB: {e}")
-        raise RuntimeError(f"Error closing MongoDB: {e}")
-    
-    try:
-        logger.info("Closing Redis connection...")
-        await redis_cache_instance.close()
-        logger.info("Resources released successfully.")
-    except Exception as e:
-        logging.critical(f"Error closing Redis: {e}")
-        raise RuntimeError(f"Error closing Redis: {e}")
-    
+        logger.error(f"Error closing Postgres: {e}")
 
+    try:
+        await mongo_db.close()
+        logger.info("Mongo connection closed.")
+    except Exception as e:
+        logger.error(f"Error closing MongoDB: {e}")
+
+    try:
+        await redis_cache.close()
+        logger.info("Redis connection closed.")
+    except Exception as e:
+        logger.error(f"Error closing Redis: {e}")
+    
 
 #------ARRANQUE DE LA APP------
 def start_app() -> FastAPI:
@@ -107,8 +97,8 @@ def start_app() -> FastAPI:
     
     #------INICIALIZAR LA APLICACIÓN
     app = FastAPI(
-        title="RK Chatbot",
-        description="API chatbot para agencia comercial",
+        title="Inma Backend API",
+        description="API para el backend de Inma, la asistente virtual inmobiliaria.",
         version="1.0.0",
         docs_url="/api/docs",
         redoc_url="/api/redoc",
@@ -117,24 +107,16 @@ def start_app() -> FastAPI:
 
     #------MIDDLEWARE CORS
     try:
-        cors_origins = os.getenv("CORS_ORIGINS", "[*]")
-        CORS_ORIGINS = json.loads(cors_origins)
-        print(f"CORS ORIGINS: {CORS_ORIGINS}")
-
-        if not isinstance(CORS_ORIGINS, list):
-            raise ValueError("CORS_ORIGINS must be a list in .env")
+        allow_origins = settings.cors_allow_origins 
 
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=["http://localhost:5173"],
+            allow_origins=allow_origins,
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
         )
         logger.info("CORS middleware running successfully...")
-    except json.JSONDecodeError as json_error:
-        logger.critical(f"Invalid JSON format in CORS_ORIGINS environment variable: {json_error}")
-        raise ValueError("Failed to parse CORS_ORIGINS. Ensure it is a valid JSON array.") from json_error
     except Exception as e:
         logger.critical(f"Error configuring CORS middleware: {e}")
         raise RuntimeError("Failed to configure CORS middleware") from e
@@ -171,14 +153,14 @@ def start_app() -> FastAPI:
         raise RuntimeError("Failed to mount static files") from e
     
     #------INCLUIR RUTAS
-    try:
+    """try:
         app.include_router(main_router())
         logger.info("Routes established successfully...")
     except Exception as e:
         logger.critical(f"Error including routers: {e}")
         raise RuntimeError("Failed to include routers") from e
     
-    logger.info("App running succesfully.")
+    logger.info("App running succesfully.")"""
     
     return app
 
