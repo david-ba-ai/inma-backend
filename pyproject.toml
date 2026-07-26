@@ -5,7 +5,7 @@ description = "INMA Backend FastAPI"
 authors = [{ name = "David Baños Abril"}]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "apscheduler>=3.11.0",
     "asyncpg>=0.30.0",
