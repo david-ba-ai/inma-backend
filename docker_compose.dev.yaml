@@ -4,8 +4,8 @@
 # - docker-compose down --volumes --remove-orphans
 # - docker image prune -a -f
 
-# docker compose -f docker_compose.yaml build
-# docker compose -f docker_compose.yaml up
+# docker compose -f docker_compose.dev.yaml build
+# docker compose -f docker_compose.dev.yaml up
 
 services:
 

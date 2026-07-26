@@ -81,5 +81,5 @@ EXPOSE 8000
 # Healthcheck para Docker/Kubernetes
 HEALTHCHECK CMD curl -fs http://localhost:8000/health || exit 1
 
-# Comando de inicio (multi-worker para producción)
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Comando de inicio
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

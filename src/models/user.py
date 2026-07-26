@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 from typing import List, Dict, Any
 from pydantic import EmailStr, Field, field_validator, field_serializer, ConfigDict
 from typing import List
-import uuid
 from beanie import Document
 
 # ------MODELO PARA LA COLECCIÓN 'USERS'------

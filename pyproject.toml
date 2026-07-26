@@ -2,13 +2,10 @@
 name = "inma_backend"
 version = "0.1.0"
 description = "INMA Backend FastAPI"
-authors = [
-  { name = "David Baños Abril"}
-]
+authors = [{ name = "David Baños Abril"}]
 license = { text = "MIT" }
-
+readme = "README.md"
 requires-python = ">=3.12"
-
 dependencies = [
     "apscheduler>=3.11.0",
     "asyncpg>=0.30.0",
@@ -40,6 +37,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# 📘 Dependencias de desarrollo
 dev = [
   "pytest>=8.3.3",
   "pytest-asyncio>=0.23.6",

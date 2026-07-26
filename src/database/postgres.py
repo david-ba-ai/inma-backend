@@ -14,7 +14,6 @@ from asyncpg import Pool, Record
 class PostgresDatabase:
     """
     Gestor asíncrono de conexión a PostgreSQL.
-    Soporta entornos de desarrollo y producción mediante inyección de configuración.
     """
 
     def __init__(

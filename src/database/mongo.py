@@ -11,6 +11,8 @@ from typing import Optional
 from src.models.messages import MessagesModel
 from src.models.user import UserModel
 
+COLLECTIONS = ["messages", "users"]
+
 class MongoDatabase:
 
     # ------INICIALIZACIÓN DE MONGO------
@@ -28,7 +30,7 @@ class MongoDatabase:
 
         self._client: AsyncIOMotorClient = AsyncIOMotorClient(mongo_uri)
         self._db: AsyncIOMotorDatabase = self._client[mongo_db_name]
-        self._collections: List[str] = ["messages", "users"]
+        self._collections: List[str] = COLLECTIONS
 
     # ------INICIALIZACIÓN DE BEANIE------
     async def init_beanie(self):

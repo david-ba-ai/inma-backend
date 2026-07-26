@@ -8,12 +8,14 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from src.routers.session import create_object_sessions
 logger = logging.getLogger(__name__)
 
+excluded_paths = ["/login", "/", "/welcome-message", "/docs", "/openapi.json", "/redoc"]
+
 class SessionMiddleware(BaseHTTPMiddleware):
 
     def __init__(self, app, secret_key):
         super().__init__(app)
         self.cookie_name = "id"
-        self.excluded_paths = ["/login", "/", "/welcome-message"]
+        self.excluded_paths = excluded_paths
         self.signer = Signer(secret_key)
 
     async def dispatch(self, request: Request, call_next) -> Response:

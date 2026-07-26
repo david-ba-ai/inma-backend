@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 from src.core.settings import settings
 from src.core.middleware import SessionMiddleware
-from src.core.factories import create_mongo, create_redis, create_postgres
+from src.core.db_factories import create_mongo, create_redis, create_postgres
 from src.services.sessions_service import SessionService
 from src.services.messages_service import MessagesService
 from src.services.user_service import UserService
@@ -100,8 +100,8 @@ def start_app() -> FastAPI:
         title="Inma Backend API",
         description="API para el backend de Inma, la asistente virtual inmobiliaria.",
         version="1.0.0",
-        docs_url="/api/docs",
-        redoc_url="/api/redoc",
+        docs_url="/docs",
+        redoc_url="/redoc",
         lifespan=lifespan
     )
 
