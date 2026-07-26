@@ -1,0 +1,24 @@
+# ---- Database
+data/*
+db/
+
+# ---- Runtime
+logs/
+
+# ---- Variables de entorno
+.env
+.env.production
+
+# ---- Entorno
+venv/
+.venv/
+
+# ---- IDE
+.vscode/
+.devcontainer/
+
+# ---- Python
+__pycache__/
+*.pyc
+
+
