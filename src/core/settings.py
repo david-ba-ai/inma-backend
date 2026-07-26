@@ -3,12 +3,12 @@ Instancia global de configuración de variables de entorno y ajustes de la aplic
 Utiliza Pydantic Settings para gestionar la configuración.
 """
 
-from pydantic_settings import BaseSettings
-from pydantic import Field, ConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 # ------CONFIGURACIÓN DE POSTGRES------
 class PostgresSettings(BaseSettings):
-    model_config = ConfigDict(env_prefix="PG_", extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="PG_", extra="ignore")
 
     user: str = Field(default="devuser")
     password: str = Field(default="devpassword")
@@ -19,7 +19,7 @@ class PostgresSettings(BaseSettings):
 
 # ------CONFIGURACIÓN DE REDIS------
 class RedisSettings(BaseSettings):
-    model_config = ConfigDict(extra="ignore")
+    model_config = SettingsConfigDict(extra="ignore")
 
     host: str = Field(default="redis")
     port: int = Field(default=6379)
@@ -28,14 +28,14 @@ class RedisSettings(BaseSettings):
 
 # ------CONFIGURACIÓN DE MONGO------
 class MongoSettings(BaseSettings):
-    model_config = ConfigDict(extra="ignore")
+    model_config = SettingsConfigDict(extra="ignore")
 
     uri: str = Field(default="mongodb://mongo:27017")
     db_name: str = Field(default="mongo_db")
 
 # ------CONFIGURACIÓN DE MODELOS DE LENGUAJE------
 class IASettings(BaseSettings):
-    model_config = ConfigDict(extra="ignore")
+    model_config = SettingsConfigDict(extra="ignore")
 
     openai_api_key: str | None = None
     langchain_api_key: str | None = None
@@ -44,7 +44,7 @@ class IASettings(BaseSettings):
 
 # ------CONFIGURACIÓN DE TWILIO------
 class TwilioSettings(BaseSettings):
-    model_config = ConfigDict(extra="ignore")
+    model_config = SettingsConfigDict(extra="ignore")
 
     account_sid: str | None = None
     auth_token: str | None = None
@@ -54,13 +54,17 @@ class TwilioSettings(BaseSettings):
 
 # ------CONFIGURACIÓN GLOBAL------
 class AppSettings(BaseSettings):
-    model_config = ConfigDict(extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_nested_delimiter="__",
+        extra="ignore",
+    )
 
     # Variables generales
     env: str = "dev"
     debug: bool = False
-    cors_allow_origins: str = ["*"]
-    middleware_secret_key: str = None
+    cors_allow_origins: str = "*"
+    middleware_secret_key: str | None = None
 
     # Configuraciones específicas para bases de datos
     pg: PostgresSettings = PostgresSettings()

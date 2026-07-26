@@ -3,11 +3,11 @@ import os
 # DIRECTORIOS BASE
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
-DB_DIR = os.path.join(BASE_DIR, 'database')
+DB_DIR = os.path.join(BASE_DIR, 'db')
 PROMPT_DIR = os.path.join(BASE_DIR, 'prompts')
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 APP_DIR = os.path.join(BASE_DIR, 'app')
-ENR_DIR = os.path.join(BASE_DIR, 'enrichments')
+ENR_DIR = os.path.join(BASE_DIR, 'resources')
 
 
 #NAMES------------------------------------------------------------------------

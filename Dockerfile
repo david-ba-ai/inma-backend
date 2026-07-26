@@ -1,85 +1,49 @@
 # syntax=docker/dockerfile:1
 
-########################################
-# STAGE 1 — deps
-# Instala dependencias desde pyproject.toml + uv.lock (reproducible)
-########################################
-FROM python:3.12-slim AS deps
+FROM ghcr.io/astral-sh/uv:0.11.32 AS uv
 
-# Variables de entorno básicas y limpieza
+FROM python:3.12-slim-bookworm AS build
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DEBIAN_FRONTEND=noninteractive
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv
 
 WORKDIR /app
 
-# Paquetes del sistema mínimos (solo lo necesario para compilar wheels si hace falta)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl ca-certificates build-essential pkg-config libpq-dev \
- && rm -rf /var/lib/apt/lists/*
-
-# Instalar UV
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
- && ln -s /root/.local/bin/uv /usr/local/bin/uv
-
-# Copiamos los archivos de definición del proyecto
+COPY --from=uv /uv /uvx /bin/
 COPY pyproject.toml uv.lock ./
 
-# Exportar dependencias del lockfile (sin incluir el proyecto raíz)
-RUN uv export --frozen > /tmp/requirements.txt \
- && pip install --no-cache-dir --prefix=/install -r /tmp/requirements.txt
+RUN uv sync --locked --no-dev --no-install-project
 
 
-########################################
-# STAGE 2 — build
-# Instala tu proyecto dentro del entorno Python (NO editable)
-########################################
-FROM python:3.12-slim AS build
+FROM python:3.12-slim-bookworm AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-# Copiamos dependencias desde el stage anterior
-COPY --from=deps /install /usr/local
+RUN groupadd --system appuser \
+ && useradd --system --gid appuser --home-dir /app appuser \
+ && mkdir -p /app/static /app/logs \
+ && chown -R appuser:appuser /app
 
-# Copiamos TODO el repositorio (fuente + configs + prompts + resources)
-COPY . .
+COPY --from=build /opt/venv /opt/venv
+COPY --chown=appuser:appuser src ./src
+COPY --chown=appuser:appuser prompts ./prompts
+COPY --chown=appuser:appuser config ./config
+COPY --chown=appuser:appuser resources ./resources
+COPY --chown=appuser:appuser data ./data
+COPY --chown=appuser:appuser db ./db
 
-# Instalamos el proyecto como paquete (no editable)
-RUN pip install --no-cache-dir .
-
-
-########################################
-# STAGE 3 — runtime
-# Imagen final: ligera, segura y rápida
-########################################
-FROM python:3.12-slim AS runtime
-
-# Configuración base
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-WORKDIR /app
-
-# Usuario no-root
-RUN useradd -m appuser
 USER appuser
 
-# Copiar dependencias + proyecto ya instalado
-COPY --from=build /usr/local /usr/local
-
-# Copiar solo artefactos necesarios en tiempo de ejecución.
-COPY prompts ./prompts
-COPY config ./config
-COPY resources ./resources
-
-# Puerto expuesto (FastAPI/Uvicorn)
 EXPOSE 8000
 
-# Healthcheck para Docker/Kubernetes
-HEALTHCHECK CMD curl -fs http://localhost:8000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
 
-# Comando de inicio
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

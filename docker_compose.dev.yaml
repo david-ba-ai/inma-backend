@@ -57,14 +57,14 @@ services:
     environment:
       POSTGRES_USER: ${PG__USER:-devuser}
       POSTGRES_PASSWORD: ${PG__PASSWORD:-devpassword}
-      POSTGRES_DB: ${PG__DB:-postgres_db}
+      POSTGRES_DB: ${PG__DB:-pg_db}
       
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432" # Exponer puerto para conexiones externas. Solo en desarrollo.
     healthcheck:  # Checkout con reinicio
-      test: ["CMD-SHELL", "pg_isready -U ${PG__USER:-devuser} -d ${PG__DB:-postgres_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${PG__USER:-devuser} -d ${PG__DB:-pg_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -80,12 +80,12 @@ services:
     working_dir: /app # Montar el proyecto en el contenedor para hot-reload
     volumes:
       - .:/app:cached  # Volumen que persiste entre reinicios
+      - backend-logs:/app/logs
+      - backend-static:/app/static
     ports:
       - "8000:8000" # Mapeo de puertos. Solo en desarrollo.
     env_file:
       - .env # Archivo .env
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://${PG__USER}:${PG__PASSWORD}@${PG__HOST}:${PG__PORT}/${PG__DB}
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --log-level debug --reload
     depends_on:
       redis:
@@ -101,6 +101,8 @@ volumes:
   redis-data:
   mongo-data:
   postgres-data:
+  backend-logs:
+  backend-static:
 
 networks:
   backend:

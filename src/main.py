@@ -16,7 +16,7 @@ from src.services.sessions_service import SessionService
 from src.services.messages_service import MessagesService
 from src.services.user_service import UserService
 from src.utils.logger_config import configure_logging
-#from src.routers.base import main_router
+from src.routers.health import router as health_router
 from src.data_generation.load_app_data import load_app_data
 
 # Configurar logging
@@ -107,7 +107,11 @@ def start_app() -> FastAPI:
 
     #------MIDDLEWARE CORS
     try:
-        allow_origins = settings.cors_allow_origins 
+        allow_origins = [
+            origin.strip()
+            for origin in settings.cors_allow_origins.split(",")
+            if origin.strip()
+        ]
 
         app.add_middleware(
             CORSMiddleware,
@@ -124,7 +128,12 @@ def start_app() -> FastAPI:
 
     #------MIDDLEWARE DE SESIONES
     try:
-        app.add_middleware(SessionMiddleware, secret_key=os.getenv("MIDDLEWARE_SECRET_KEY"))
+        if not settings.middleware_secret_key:
+            raise RuntimeError("MIDDLEWARE_SECRET_KEY is required")
+        app.add_middleware(
+            SessionMiddleware,
+            secret_key=settings.middleware_secret_key,
+        )
         logger.info("Sessions middleware configured...")
     except Exception as e:
         logger.critical(f"Error initializing Sessions Middleware: {e}")
@@ -153,14 +162,14 @@ def start_app() -> FastAPI:
         raise RuntimeError("Failed to mount static files") from e
     
     #------INCLUIR RUTAS
-    """try:
-        app.include_router(main_router())
+    try:
+        app.include_router(health_router)
         logger.info("Routes established successfully...")
     except Exception as e:
         logger.critical(f"Error including routers: {e}")
         raise RuntimeError("Failed to include routers") from e
     
-    logger.info("App running succesfully.")"""
+    logger.info("App running succesfully.")
     
     return app
 

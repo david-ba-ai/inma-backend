@@ -8,7 +8,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from src.routers.session import create_object_sessions
 logger = logging.getLogger(__name__)
 
-excluded_paths = ["/login", "/", "/welcome-message", "/docs", "/openapi.json", "/redoc"]
+excluded_paths = ["/login", "/", "/welcome-message", "/health", "/docs", "/openapi.json", "/redoc"]
 
 class SessionMiddleware(BaseHTTPMiddleware):
 
